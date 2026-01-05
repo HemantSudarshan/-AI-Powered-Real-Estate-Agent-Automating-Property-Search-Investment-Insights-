@@ -11,6 +11,16 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     firecrawl_api_key: str = ""
     
+    # Database
+    database_url: str = "sqlite:///./real_estate.db"
+    
+    # Redis & Caching
+    redis_url: str = "redis://localhost:6379/0"
+    enable_cache: bool = True
+    cache_ttl_search: int = 3600  # 1 hour
+    cache_ttl_analysis: int = 86400  # 24 hours
+    cache_ttl_trends: int = 43200  # 12 hours
+    
     # Logging
     log_level: str = "INFO"
     
