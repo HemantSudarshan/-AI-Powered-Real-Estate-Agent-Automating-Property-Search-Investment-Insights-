@@ -1,59 +1,114 @@
-# AI-Powered Real Estate Agent: Automating Property Search & Investment Insights
+# 🏠 AI-Powered Real Estate Agent
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.0+-red.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ![1](https://github.com/user-attachments/assets/1afc3f87-57f7-4714-aff1-0b4cb83df776)
 
+An intelligent real estate assistant that automates property discovery, analysis, and investment insights using AI.
 
-## 🚀 Overview
-Finding the perfect property is exhausting—jumping between multiple sites, comparing prices, and analyzing market trends. So, I built an **AI Real Estate Agent** that does it all automatically! 🤯
+## ✨ Features
 
-## 🔥 Key Features
-✔ **Smart Property Search** – Extracts real-time listings from **99acres, Housing.com, Square Yards, MagicBricks, and NoBroker**.
-✔ **AI-Powered Insights** – Uses **Gemini AI** for NLP-driven property descriptions & **OpenAI o-3 mini** for deep property analysis.
-✔ **Price Trend Prediction** – Forecasts market trends based on historical data.
-✔ **Investment Potential Calculator** – Evaluates **ROI & long-term profitability**.
-✔ **Instant Deal Alerts** – Notifies users when properties match their criteria.
+- 🔍 **Smart Property Search** – Extracts real-time listings from 99acres, Housing.com, Square Yards
+- 🤖 **AI-Powered Analysis** – Uses Gemini AI for property insights and recommendations
+- 📊 **Investment Insights** – Analyzes properties based on location, price, and amenities
+- 🎯 **Interactive UI** – Clean Streamlit interface for easy property searching
 
-## 🛠 Technologies Used
-- **Gemini AI** – NLP & data processing
-- **OpenAI o-3 mini** – Investment insights & trend forecasting
-- **Firecrawl API** – Real-time property data extraction
-- **Agno AI Agent** – AI-driven property search & automation
-- **Python, Flask/Django** – Backend API
-- **Streamlit** – Interactive UI for users
-- **MongoDB/PostgreSQL** – Efficient database management
-- **Google Cloud/AWS** – Hosting & AI services
+## 🛠️ Tech Stack
 
-## 🚀 Why This Project?
-Property search shouldn’t be time-consuming. This AI agent automates the entire process—saving time, providing accurate market insights, and spotting hidden investment opportunities.
+- **AI**: Google Gemini AI
+- **Web Scraping**: Firecrawl API
+- **Frontend**: Streamlit
+- **Data Validation**: Pydantic
 
-## 📌 How to Use
-1. Clone the repository:
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.9+
+- Gemini API Key ([Get one here](https://makersuite.google.com/app/apikey))
+- Firecrawl API Key ([Get one here](https://firecrawl.dev))
+
+### Installation
+
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/HemantSudarshan/-AI-Powered-Real-Estate-Agent-Automating-Property-Search-Investment-Insights-.git
+   cd -AI-Powered-Real-Estate-Agent-Automating-Property-Search-Investment-Insights-
    ```
-2. Navigate to the project directory:
+
+2. **Create virtual environment**:
    ```bash
-   cd AI-Powered-Real-Estate-Agent-Automating-Property-Search-Investment-Insights
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+   # source venv/bin/activate  # Linux/Mac
    ```
-3. Install dependencies:
+
+3. **Install dependencies**:
    ```bash
-   pip install -r requirements.txt  # For Backend
-   npm install  
+   pip install -r requirements.txt
    ```
-4. Run the project:
+
+4. **Set up environment variables** (optional):
    ```bash
-   python app.py  
-   npm start  
+   copy .env.example .env
+   # Edit .env with your API keys
    ```
-5. Access the application at `http://localhost:3000`.
 
-## 🤝 Contribution
-Feel free to contribute by submitting issues or pull requests! 🚀
+5. **Run the application**:
+   
+   **Option 1: New Modular Version (Recommended)**
+   ```bash
+   streamlit run src/ui/app.py
+   ```
+   
+   **Option 2: Legacy Version (Backward Compatible)**
+   ```bash
+   streamlit run Ai_RealAgent.py
+   ```
 
-## 📜 License
-This project is licensed under the **MIT License**.
+6. **Access the app** at `http://localhost:8501`
 
-📌 Check it out on GitHub: [GitHub Repo](https://github.com/HemantSudarshan/-AI-Powered-Real-Estate-Agent-Automating-Property-Search-Investment-Insights-.git)
+## 📖 Usage
 
-Would love to hear your thoughts—What features would you add to an AI real estate agent? Let’s discuss in the comments! 👇
+1. Enter your API keys in the sidebar (or set via environment variables)
+2. Enter your search criteria:
+   - City name
+   - Property type (Flat/Individual House)
+   - Maximum price (in Crores)
+3. Click "Start Search" to get AI-powered property recommendations
 
+## 📁 Project Structure
+
+```
+├── Ai_RealAgent.py     # Main application file
+├── Directions.md       # Development roadmap & architecture guide
+├── requirements.txt    # Python dependencies
+├── .env.example        # Environment variables template
+├── .gitignore          # Git ignore patterns
+└── README.md           # This file
+```
+
+## 🔮 Future Roadmap
+
+See [Directions.md](Directions.md) for a comprehensive guide on transforming this into a production-ready application with:
+- Modular architecture with FastAPI backend
+- Vector database for semantic search
+- Investment analysis agents
+- Docker deployment & CI/CD
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 📧 Contact
+
+**Hemant Sudarshan** - [GitHub](https://github.com/HemantSudarshan)
+
+---
+
+⭐ If you found this project helpful, please give it a star!
