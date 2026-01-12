@@ -1,47 +1,51 @@
 # Architecture Documentation
 
 ## Overview
-AI-Powered Real Estate Agent with modular, production-ready architecture featuring multi-agent AI, caching, and database persistence.
+AI-Powered Real Estate Agent with modular, production-ready architecture featuring multi-agent AI, caching, database persistence, Docker deployment, and CI/CD pipeline.
 
 ## System Design
 
 ### Architecture Diagram
 ```
-┌─────────────────────────────────────────┐
-│  Streamlit UI (4 Tabs: Search, Invest,  │
-│     Market Trends, History)              │
-└──────────────┬───────────────────────────┘
-               │
-        ┌──────┴───────┐
-        │  AI Agents   │
-        └──────┬───────┘
-               │
-    ┌──────────┼──────────┬──────────┐
-    │          │          │          │
-┌───▼────┐ ┌──▼──────┐ ┌─▼─────────┐│
-│Search  │ │Investment│ │Market     ││
-│Agent   │ │Agent     │ │Trend Agent││
-└───┬────┘ └──┬───────┘ └─┬─────────┘│
-    │         │          │          │
-    └─────────┴──────────┴──────────┘
-               │
-    ┌──────────┴──────────┐
-    │                     │
-┌───▼──────┐       ┌─────▼──────┐
-│ Services │       │   Cache    │
-│(Scraping,│       │  (Redis)   │
-│   AI)    │       │ [Optional] │
-└───┬──────┘       └─────┬──────┘
-    │                    │
-    └─────────┬──────────┘
-              │
-      ┌───────▼────────┐
-      │   Database     │
-      │   (SQLite)     │
-      │ - Properties   │
-      │ - History      │
-      │ - Analysis     │
-      └────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    Docker Container                      │
+├─────────────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────────────────────┐  │
+│  │  Streamlit UI (4 Tabs: Search, Invest,            │  │
+│  │     Market Trends, History)                        │  │
+│  └──────────────────────┬────────────────────────────┘  │
+│                         │                                │
+│                  ┌──────┴───────┐                        │
+│                  │  AI Agents   │                        │
+│                  └──────┬───────┘                        │
+│                         │                                │
+│      ┌──────────────────┼──────────────────┐            │
+│      │                  │                  │            │
+│  ┌───▼────┐      ┌──────▼───┐      ┌──────▼─────┐      │
+│  │Search  │      │Investment│      │Market Trend│      │
+│  │Agent   │      │Agent     │      │Agent       │      │
+│  └───┬────┘      └────┬─────┘      └─────┬──────┘      │
+│      │                │                  │              │
+│      └────────────────┼──────────────────┘              │
+│                       │                                  │
+│      ┌────────────────┴────────────────┐                │
+│      │                                 │                │
+│  ┌───▼──────┐                   ┌──────▼──────┐        │
+│  │ Services │                   │    Cache    │        │
+│  │(Scraping,│                   │   (Redis)   │        │
+│  │   AI)    │                   │  Container  │        │
+│  └───┬──────┘                   └─────────────┘        │
+│      │                                                  │
+│  ┌───▼────────┐                                        │
+│  │  Database  │ ← Volume Mount                         │
+│  │  (SQLite)  │                                        │
+│  └────────────┘                                        │
+└─────────────────────────────────────────────────────────┘
+                         │
+              ┌──────────┴──────────┐
+              │   GitHub Actions    │
+              │   CI/CD Pipeline    │
+              └─────────────────────┘
 ```
 
 ### Components
@@ -49,18 +53,18 @@ AI-Powered Real Estate Agent with modular, production-ready architecture featuri
 #### 1. **Agents Layer** (`src/agents/`)
 - `base_agent.py` - Abstract base class for all agents
 - `search_agent.py` - Property search orchestration
-- `investment_agent.py` - **NEW** ROI & investment analysis
-- `market_trend_agent.py` - **NEW** Market trend predictions
+- `investment_agent.py` - ROI & investment analysis
+- `market_trend_agent.py` - Market trend predictions
 
 #### 2. **Services Layer** (`src/services/`)
 - `scraping_service.py` - Firecrawl integration for property data
 - `ai_service.py` - Gemini AI for property analysis
-- `cache_service.py` - **NEW** Redis caching with TTL
+- `cache_service.py` - Redis caching with TTL
 
 #### 3. **Database Layer** (`src/database/`)
-- `models.py` - **NEW** SQLAlchemy models (Property, SearchHistory, InvestmentAnalysis)
-- `session.py` - **NEW** Database session management
-- `crud.py` - **NEW** CRUD operations for all models
+- `models.py` - SQLAlchemy models (Property, SearchHistory, InvestmentAnalysis)
+- `session.py` - Database session management
+- `crud.py` - CRUD operations for all models
 
 #### 4. **Schemas** (`src/schemas/`)
 - `property.py` - Pydantic models for data validation
@@ -71,6 +75,67 @@ AI-Powered Real Estate Agent with modular, production-ready architecture featuri
 
 #### 6. **UI** (`src/ui/`)
 - `app.py` - Enhanced Streamlit web interface with 4 tabs
+
+#### 7. **Health** (`src/health.py`)
+- Health check endpoint for container orchestration
+- Database and Redis connectivity monitoring
+
+---
+
+## Production Infrastructure
+
+### Docker Configuration
+
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | Multi-stage build with non-root user |
+| `docker-compose.yml` | App + Redis services with health checks |
+| `.dockerignore` | Excludes unnecessary files from build |
+
+### CI/CD Pipeline (`.github/workflows/ci.yml`)
+
+```
+Push/PR to main
+      │
+      ▼
+┌─────────────────┐
+│  Install Deps   │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    ▼         ▼
+┌───────┐ ┌───────┐
+│ Lint  │ │ Test  │
+│ (Ruff)│ │(Pytest│
+└───┬───┘ └───┬───┘
+    │         │
+    └────┬────┘
+         ▼
+┌─────────────────┐
+│  Docker Build   │
+│   (Verify)      │
+└─────────────────┘
+```
+
+### Testing Infrastructure
+
+| File | Purpose |
+|------|---------|
+| `pyproject.toml` | Pytest, Ruff, coverage config |
+| `tests/conftest.py` | Shared fixtures and mocks |
+| `tests/test_agents.py` | Agent unit tests |
+| `tests/test_services.py` | Service unit tests |
+| `tests/test_database.py` | CRUD operation tests |
+
+### Database Migrations (Alembic)
+
+| File | Purpose |
+|------|---------|
+| `alembic.ini` | Alembic configuration |
+| `alembic/env.py` | Migration environment |
+| `alembic/versions/` | Migration scripts |
+
+---
 
 ## Features
 
@@ -103,6 +168,8 @@ AI-Powered Real Estate Agent with modular, production-ready architecture featuri
 - **Database Persistence**: Searchable property archive
 - **Graceful Degradation**: Works without Redis if unavailable
 
+---
+
 ## Design Patterns
 
 ### Separation of Concerns
@@ -119,17 +186,21 @@ Services are injected into agents, making the code testable and maintainable.
 ### Configuration Management
 All configuration through environment variables using Pydantic Settings.
 
+---
+
 ## Running the Application
 
-### New Modular Version (Recommended)
+### Local Development
 ```bash
 streamlit run src/ui/app.py
 ```
 
-### Legacy Version (Backward Compatible)
+### Docker
 ```bash
-streamlit run Ai_RealAgent.py
+docker-compose up -d
 ```
+
+---
 
 ## Database Schema
 
@@ -148,6 +219,8 @@ streamlit run Ai_RealAgent.py
 - Historical analysis tracking
 - Versioned recommendations
 
+---
+
 ## Caching Strategy
 
 **Cache Keys:**
@@ -160,12 +233,12 @@ streamlit run Ai_RealAgent.py
 - 10x faster repeat queries
 - Graceful degradation if Redis unavailable
 
+---
+
 ## Future Enhancements
 - FastAPI REST endpoints
 - Vector database for semantic search
 - PostgreSQL for production
-- Docker deployment
-- CI/CD pipeline
-- Comprehensive test suite
+- Kubernetes deployment
 
 See `Directions.md` for complete roadmap.

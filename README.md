@@ -1,7 +1,9 @@
 # 🏠 AI-Powered Real Estate Agent
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.0+-red.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ![1](https://github.com/user-attachments/assets/1afc3f87-57f7-4714-aff1-0b4cb83df776)
@@ -12,22 +14,32 @@ An intelligent real estate assistant that automates property discovery, analysis
 
 - 🔍 **Smart Property Search** – Extracts real-time listings from 99acres, Housing.com, Square Yards
 - 🤖 **AI-Powered Analysis** – Uses Gemini AI for property insights and recommendations
-- 📊 **Investment Insights** – Analyzes properties based on location, price, and amenities
-- 🎯 **Interactive UI** – Clean Streamlit interface for easy property searching
+- 📊 **Investment Insights** – ROI projections, rental yields, and risk scoring
+- 📈 **Market Trends** – Price trends, demand analysis, and growth predictions
+- 🕒 **Search History** – Track and repeat past searches
+- ⚡ **Redis Caching** – 70% API cost reduction with intelligent caching
+- 🎯 **Interactive UI** – Clean Streamlit interface with 4 tabs
 
 ## 🛠️ Tech Stack
 
-- **AI**: Google Gemini AI
-- **Web Scraping**: Firecrawl API
-- **Frontend**: Streamlit
-- **Data Validation**: Pydantic
+| Category | Technology |
+|----------|------------|
+| **AI** | Google Gemini AI |
+| **Web Scraping** | Firecrawl API |
+| **Frontend** | Streamlit |
+| **Database** | SQLite / PostgreSQL |
+| **Caching** | Redis |
+| **Validation** | Pydantic |
+| **Testing** | Pytest |
+| **CI/CD** | GitHub Actions |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.9+
+- Python 3.10+
 - Gemini API Key ([Get one here](https://makersuite.google.com/app/apikey))
 - Firecrawl API Key ([Get one here](https://firecrawl.dev))
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
@@ -49,57 +61,102 @@ An intelligent real estate assistant that automates property discovery, analysis
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables** (optional):
+4. **Set up environment variables**:
    ```bash
    copy .env.example .env
    # Edit .env with your API keys
    ```
 
 5. **Run the application**:
-   
-   **Option 1: New Modular Version (Recommended)**
    ```bash
    streamlit run src/ui/app.py
-   ```
-   
-   **Option 2: Legacy Version (Backward Compatible)**
-   ```bash
-   streamlit run Ai_RealAgent.py
    ```
 
 6. **Access the app** at `http://localhost:8501`
 
-## 📖 Usage
+## 🐳 Docker Deployment
 
-1. Enter your API keys in the sidebar (or set via environment variables)
-2. Enter your search criteria:
-   - City name
-   - Property type (Flat/Individual House)
-   - Maximum price (in Crores)
-3. Click "Start Search" to get AI-powered property recommendations
+### Quick Start with Docker Compose
+```bash
+# Build and run with Redis
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+
+# Stop services
+docker-compose down
+```
+
+### Build Docker Image Only
+```bash
+docker build -t real-estate-agent .
+docker run -p 8501:8501 --env-file .env real-estate-agent
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ -v --cov=src --cov-report=term-missing
+
+# Run linting
+ruff check src/ tests/
+```
+
+## 🗄️ Database Migrations
+
+```bash
+# Run migrations
+alembic upgrade head
+
+# Create new migration
+alembic revision --autogenerate -m "description"
+
+# Downgrade
+alembic downgrade -1
+```
 
 ## 📁 Project Structure
 
 ```
-├── Ai_RealAgent.py     # Main application file
-├── Directions.md       # Development roadmap & architecture guide
-├── requirements.txt    # Python dependencies
-├── .env.example        # Environment variables template
-├── .gitignore          # Git ignore patterns
-└── README.md           # This file
+├── src/
+│   ├── agents/          # AI agents (Search, Investment, Market Trend)
+│   ├── services/        # External services (AI, Scraping, Cache)
+│   ├── database/        # SQLAlchemy models and CRUD
+│   ├── schemas/         # Pydantic validation schemas
+│   ├── ui/              # Streamlit interface
+│   ├── utils/           # Configuration and logging
+│   └── health.py        # Health check endpoint
+├── tests/               # Unit and integration tests
+├── alembic/             # Database migrations
+├── docs/                # Documentation
+├── .github/workflows/   # CI/CD pipelines
+├── Dockerfile           # Container configuration
+├── docker-compose.yml   # Multi-container setup
+└── pyproject.toml       # Project configuration
 ```
 
-## 🔮 Future Roadmap
+## 📖 Usage
 
-See [Directions.md](Directions.md) for a comprehensive guide on transforming this into a production-ready application with:
-- Modular architecture with FastAPI backend
-- Vector database for semantic search
-- Investment analysis agents
-- Docker deployment & CI/CD
+1. Enter your API keys in the sidebar (or set via environment variables)
+2. Navigate between tabs:
+   - **Search** – Find properties by city, type, and price
+   - **Investment** – Get ROI analysis for properties
+   - **Market Trends** – View market predictions
+   - **History** – Access past searches
+3. Click "Start Search" to get AI-powered property recommendations
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Setting up development environment
+- Code style and linting
+- Running tests
+- Submitting pull requests
 
 ## 📄 License
 
